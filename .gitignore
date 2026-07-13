@@ -1,0 +1,21 @@
+# Python virtual environment
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Agent runtime files
+temp_agent_script.py
+
+# Local success outputs (keeps your repository clean of ran scripts)
+executed_successfully/
+
+# OS specific files
+.DS_Store
+Thumbs.db

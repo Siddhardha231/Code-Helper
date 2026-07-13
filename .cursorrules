@@ -1,0 +1,13 @@
+# Project Context
+This project is a local self-correcting code execution agent.
+It uses Ollama (local LLM), LangChain (orchestration), and a subprocess runner to run Python code and fix any errors.
+
+# Tech Stack
+- LangChain / LangChain-Ollama
+- Python 3.10+
+- Hugging Face (transformers, datasets)
+
+# Code Style Guidelines
+- Keep helper functions modular.
+- Always use standard try/except blocks with subprocesses to handle errors gracefully.
+- Minimize external dependencies outside of standard library and LangChain.
