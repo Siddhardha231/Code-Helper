@@ -9,11 +9,11 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.pytest_cache/
 
-# Agent runtime files
+# Agent runtime files & workspaces
+workspaces/
 temp_agent_script.py
-
-# Local success outputs (keeps your repository clean of ran scripts)
 executed_successfully/
 
 # OS specific files
