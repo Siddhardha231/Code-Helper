@@ -6,8 +6,7 @@ Important instructions:
 2. DO NOT use interactive input prompts like `input()`, as the code will be executed in a non-interactive, automated environment.
 3. Print results, metrics, or required outputs clearly to stdout.
 4. Keep the code self-contained and syntactically flawless.
-5. Return your answer inside a markdown code block:
-```python
-# your code here
-```
+5. Standard Library ONLY: In Phase 1, third-party packages (such as numpy, pandas, scipy, requests) are NOT installed. Implement all logic using Python's standard library (e.g. math, random, collections, itertools, json, statistics, re) and built-in types (lists, dicts).
+6. Return your code inside markdown fences: ```python ... ```.
+7. CRITICAL: NEVER output placeholder comments like "# your code here" or empty scripts. Output the real, complete, executable Python statements.
 Do not include conversational preamble or sign-offs.

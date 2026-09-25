@@ -41,6 +41,19 @@ class Debugger:
         if history_summary:
             user_message += f"\nPrior Attempts History:\n{history_summary}\n"
 
+        if "ModuleNotFoundError" in error_message or "ImportError" in error_message:
+            user_message += (
+                "\nSPECIAL CONSTRAINT: Third-party packages (e.g. numpy, pandas, scipy, requests) CANNOT be installed in Phase 1. "
+                "You MUST rewrite the script using ONLY Python's standard library (e.g. built-in lists, math, statistics, collections). "
+                "DO NOT import the missing third-party module.\n"
+            )
+
+        if "EmptyCodeError" in error_message:
+            user_message += (
+                "\nSPECIAL CONSTRAINT: NEVER output placeholder comments like '# your fixed code here'. "
+                "You MUST write the real, working Python code statements.\n"
+            )
+
         user_message += (
             f"\nPlease diagnose the error and provide the complete, corrected `{specification.entrypoint}`."
         )

@@ -43,6 +43,10 @@ class AgentOrchestrator:
         if execution_result.timed_out:
             return ErrorType.TIMEOUT
         stderr = execution_result.stderr
+        if "EmptyCodeError" in stderr:
+            return ErrorType.EMPTY_CODE
+        if "ModuleNotFoundError" in stderr or "ImportError" in stderr:
+            return ErrorType.DEPENDENCY
         if "SyntaxError" in stderr or "IndentationError" in stderr:
             return ErrorType.SYNTAX
         if "PermissionError" in stderr:

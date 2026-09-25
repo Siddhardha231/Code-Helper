@@ -114,3 +114,38 @@ def test_orchestrator_max_attempts_reached(tmp_path):
     assert result.total_attempts == 3
     assert len(result.attempts) == 3
     assert "ZeroDivisionError" in result.attempts[-1].error_message
+
+
+def test_orchestrator_handles_missing_module_and_placeholder_rejection(tmp_path):
+    # Attempt 1: Coder generates numpy (ModuleNotFoundError)
+    # Attempt 2: Debugger mistakenly outputs placeholder '# your fixed code here' (EmptyCodeError)
+    # Attempt 3: Debugger outputs working pure python code (Success)
+    responses = [
+        '{"language": "python", "execution_mode": "script", "entrypoint": "main.py", "description": "Calculate mean"}',
+        "```python\nimport non_existent_package_xyz as nep\nprint(nep.mean([1, 2, 3]))\n```",
+        "```python\n# your fixed code here\n```",
+        "```python\nnums = [1, 2, 3]\nprint(f'Mean: {sum(nums)/len(nums)}')\n```",
+    ]
+    mock_llm = MockLLMProvider(responses)
+    settings = Settings(max_attempts=4, workspace_root=tmp_path)
+    workspace_mgr = WorkspaceManager(root_dir=tmp_path)
+    sandbox = ExecutionSandbox(timeout_seconds=5)
+
+    orchestrator = AgentOrchestrator(
+        llm=mock_llm,
+        sandbox=sandbox,
+        workspace_manager=workspace_mgr,
+        settings=settings,
+    )
+
+    result = orchestrator.run("Calculate mean")
+
+    assert result.status == RunStatus.VERIFIED
+    assert result.total_attempts == 3
+    assert "Mean: 2.0" in result.execution_result.stdout
+    # Check that attempt 1 was categorized as dependency error
+    assert result.attempts[0].error_type.value == "dependency"
+    # Check that attempt 2 was categorized as empty_code error and NOT verified
+    assert result.attempts[1].error_type.value == "empty_code"
+    # Check that attempt 3 was verified
+    assert result.attempts[2].error_type.value == "none"

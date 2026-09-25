@@ -60,3 +60,27 @@ def test_sandbox_timeout(tmp_path):
     assert result.timed_out is True
     assert result.is_success is False
     assert "timed out" in result.stderr.lower()
+
+
+def test_sandbox_placeholder_and_empty_code_rejection(tmp_path):
+    sandbox = ExecutionSandbox(timeout_seconds=5)
+
+    # 1. Placeholder comment
+    script_path = tmp_path / "main.py"
+    script_path.write_text("# your fixed code here\n", encoding="utf-8")
+    result = sandbox.execute(workspace_path=tmp_path, entrypoint="main.py")
+    assert result.is_success is False
+    assert result.exit_code == 1
+    assert "EmptyCodeError" in result.stderr
+
+    # 2. Empty code
+    script_path.write_text("   \n\n", encoding="utf-8")
+    result = sandbox.execute(workspace_path=tmp_path, entrypoint="main.py")
+    assert result.is_success is False
+    assert "EmptyCodeError" in result.stderr
+
+    # 3. Only comments
+    script_path.write_text("# This is just a comment\n# Another comment\n", encoding="utf-8")
+    result = sandbox.execute(workspace_path=tmp_path, entrypoint="main.py")
+    assert result.is_success is False
+    assert "EmptyCodeError" in result.stderr

@@ -15,6 +15,8 @@ class ErrorType(str, Enum):
     NONE = "none"
     SYNTAX = "syntax"
     RUNTIME = "runtime"
+    DEPENDENCY = "dependency"
+    EMPTY_CODE = "empty_code"
     TIMEOUT = "timeout"
     PERMISSION = "permission"
     UNKNOWN = "unknown"
